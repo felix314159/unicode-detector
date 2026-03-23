@@ -113,7 +113,7 @@ permissions:
 
 jobs:
   unicode-detector:
-    uses: felix314159/unicode-detector/.github/workflows/reusable-unicode-detector.yaml@v0.1.1
+    uses: felix314159/unicode-detector/.github/workflows/reusable-unicode-detector.yaml@main
 ```
 
 Optional inputs:
@@ -121,12 +121,15 @@ Optional inputs:
 ```yaml
 jobs:
   unicode-detector:
-    uses: felix314159/unicode-detector/.github/workflows/reusable-unicode-detector.yaml@v0.1.1
+    uses: felix314159/unicode-detector/.github/workflows/reusable-unicode-detector.yaml@main
     with:
       config-path: pyproject.toml
       root: .
       format: text
 ```
+
+For stability, consumers can pin to a release tag or commit SHA instead of
+`@main`.
 
 To block merging until the check passes, the consuming repository must also
 mark the `unicode-detector` status check as required in branch protection or
@@ -141,9 +144,10 @@ which scans the full current PR diff on `pull_request` `opened`,
 
 ## Release process
 
-- Bump `unicode_detector.__version__`
+- Run `uv run python scripts/bump_version.py patch`
 - Update [CHANGELOG.md](CHANGELOG.md)
-- Create a Git tag such as `v0.1.0`
+- Commit the version bump
+- Create a Git tag such as `v0.1.3`
 - Push the tag to trigger the PyPI publish workflow
 
 ## Development
