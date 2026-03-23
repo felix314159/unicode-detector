@@ -1,0 +1,56 @@
+name: Unicode Detector
+
+on:
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - synchronize
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref || github.run_id }}
+  cancel-in-progress: ${{ github.ref_name != github.event.repository.default_branch }}
+
+jobs:
+  unicode-detector:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          fetch-depth: 0
+
+      - name: Setup uv
+        uses: astral-sh/setup-uv@e06108dd0aef18192324c70427afc47652e63a82 # v7.5.0
+
+      - name: Collect added and modified files
+        id: changed-files
+        shell: bash
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            # Scan the full current PR diff, not just the most recent push.
+            # This keeps the file list correct for batched commits and force-pushes.
+            BASE_SHA=$(git merge-base "${{ github.event.pull_request.base.sha }}" "${{ github.event.pull_request.head.sha }}")
+            HEAD_SHA="${{ github.event.pull_request.head.sha }}"
+            git diff --name-only --diff-filter=AMR "$BASE_SHA" "$HEAD_SHA" > changed_unicode_files.txt
+          else
+            echo "Unsupported event: ${{ github.event_name }}" >&2
+            exit 1
+          fi
+
+          if [ -s changed_unicode_files.txt ]; then
+            echo "has_files=true" >> "$GITHUB_OUTPUT"
+            echo "Scanning these paths:"
+            cat changed_unicode_files.txt
+          else
+            echo "has_files=false" >> "$GITHUB_OUTPUT"
+            echo "No added or modified files to scan."
+          fi
+
+      - name: Run unicode detector on changed files
+        if: steps.changed-files.outputs.has_files == 'true'
+        run: uv run unicode-detector --files-from changed_unicode_files.txt

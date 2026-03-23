@@ -1,0 +1,5 @@
+[tool.unicode-detector]
+ignored_dirs = [".git", ".venv", "node_modules"]
+ignored_filetypes = [".png", ".svg"]
+whitelisted_unicode_chars = ["→", "✓", "║"]
+common_unicode_threshold = 5

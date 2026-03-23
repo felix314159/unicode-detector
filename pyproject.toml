@@ -1,0 +1,154 @@
+[build-system]
+requires = ["setuptools>=77.0.3", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "unicode-detector"
+version = "0.1.0"
+description = "Detect non-whitelisted Unicode characters in text files"
+readme = "README.md"
+requires-python = ">=3.11"
+license = "GPL-3.0-or-later"
+license-files = ["LICENSE"]
+keywords = ["unicode", "lint", "ci", "github-actions"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Software Development :: Quality Assurance",
+]
+
+[project.scripts]
+unicode-detector = "unicode_detector.cli:main"
+
+[dependency-groups]
+test = [
+    "pytest>=8,<9",
+]
+lint = [
+    "mypy>=1.17,<2",
+    "ruff>=0.13.2,<1",
+]
+dev = [
+    { include-group = "test" },
+    { include-group = "lint" },
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["unicode_detector*"]
+
+[tool.setuptools.package-data]
+"unicode_detector" = ["py.typed"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 79
+
+[tool.ruff.lint]
+select = [
+    "E",
+    "F",
+    "I",
+    "B",
+    "D",
+]
+ignore = [
+    "D203",
+    "D212",
+]
+
+[tool.mypy]
+python_version = "3.11"
+files = ["unicode_detector"]
+
+[tool.uv]
+required-version = ">=0.7.0"
+
+[tool.unicode-detector]
+ignored_dirs = [
+    ".git",
+    ".venv",
+    ".vscode",
+    "venv",
+    "__pycache__",
+    ".mypy_cache",
+    ".pytest_cache",
+    ".ruff_cache",
+    ".tox",
+    "node_modules",
+    "dist",
+    "build",
+    "fixtures",
+    "logs",
+]
+ignored_filetypes = []
+whitelisted_unicode_chars = [
+    "✅",
+    "❌",
+    "🔥",
+    "💥",
+    "🚀",
+    "❓",
+    "🤝",
+    "🔗",
+    "🚨",
+    "💡",
+    "🛠",
+    "✨",
+    "🐞",
+    "🔁",
+    "🔀",
+    "📄",
+    "📁",
+    "📂",
+    "🟢",
+    "🟡",
+    "🔴",
+    "🎉",
+    "🧪",
+    "📋",
+    "🐍",
+    "🐘",
+    "🗑",
+    "⚠",
+    "►",
+    "→",
+    "✓",
+    "✗",
+    "┌",
+    "┬",
+    "┘",
+    "├",
+    "┤",
+    "┼",
+    "│",
+    "┴",
+    "└",
+    "┐",
+    "╔",
+    "╗",
+    "╚",
+    "╝",
+    "±",
+    "²",
+    "³",
+    "≡",
+    "═",
+    "≤",
+    "≥",
+    "≠",
+    "≈",
+    "─",
+    "—",
+    "ł",
+    "’",
+    "\u00a0",
+]
+common_unicode_threshold = 5
