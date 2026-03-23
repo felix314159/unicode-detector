@@ -68,20 +68,102 @@ Supported config keys:
 - `ignored_dirs`
 - `ignored_filetypes`
 - `whitelisted_unicode_chars`
-- `common_unicode_threshold`
+- `common_unicode_threshold` (cosmetic setting that affects only logging)
 
-Example `pyproject.toml`:
+By default, `unicode-detector` is strict:
+
+- no ignored directories
+- no ignored filetypes
+- no whitelisted Unicode characters
+
+Example `pyproject.toml` for a less strict setup:
 
 ```toml
 [tool.unicode-detector]
-ignored_dirs = [".git", ".venv", "node_modules"]
-ignored_filetypes = [".png", ".svg"]
-whitelisted_unicode_chars = ["→", "✓", "║"]
+ignored_dirs = [
+  ".git",
+  ".venv",
+  ".vscode",
+  "venv",
+  "__pycache__",
+  ".mypy_cache",
+  ".pytest_cache",
+  ".ruff_cache",
+  ".tox",
+  "node_modules",
+  "dist",
+  "build",
+  "fixtures",
+  "logs",
+]
+ignored_filetypes = []
+whitelisted_unicode_chars = [
+  "✅",
+  "❌",
+  "🔥",
+  "💥",
+  "🚀",
+  "❓",
+  "🤝",
+  "🔗",
+  "🚨",
+  "💡",
+  "🛠",
+  "✨",
+  "🐞",
+  "🔁",
+  "🔀",
+  "📄",
+  "📁",
+  "📂",
+  "🟢",
+  "🟡",
+  "🔴",
+  "🎉",
+  "🧪",
+  "📋",
+  "🐍",
+  "🐘",
+  "🗑",
+  "⚠",
+  "►",
+  "→",
+  "✓",
+  "✗",
+  "┌",
+  "┬",
+  "┘",
+  "├",
+  "┤",
+  "┼",
+  "│",
+  "┴",
+  "└",
+  "┐",
+  "╔",
+  "╗",
+  "╚",
+  "╝",
+  "±",
+  "²",
+  "³",
+  "≡",
+  "═",
+  "≤",
+  "≥",
+  "≠",
+  "≈",
+  "─",
+  "—",
+  "ł",
+  "’",
+  "\u00a0",
+]
 common_unicode_threshold = 5
 ```
 
 See [examples/pyproject.toml](examples/pyproject.toml)
-for a copy-pasteable example.
+for a copy-pasteable less strict example.
 
 ## GitHub Actions
 

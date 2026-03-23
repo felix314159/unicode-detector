@@ -4,10 +4,10 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "unicode-detector"
-version = "0.1.2"
 description = "Detect non-whitelisted Unicode characters in text files"
 readme = "README.md"
 requires-python = ">=3.11"
+dynamic = ["version"]
 license = "GPL-3.0-or-later"
 license-files = ["LICENSE"]
 keywords = ["unicode", "lint", "ci", "github-actions"]
@@ -51,6 +51,9 @@ include = ["unicode_detector*"]
 [tool.setuptools.package-data]
 "unicode_detector" = ["py.typed"]
 
+[tool.setuptools.dynamic]
+version = { attr = "unicode_detector.__version__" }
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 
@@ -76,85 +79,3 @@ files = ["unicode_detector"]
 
 [tool.uv]
 required-version = ">=0.7.0"
-
-[tool.unicode-detector]
-ignored_dirs = [
-    ".git",
-    ".venv",
-    ".vscode",
-    "venv",
-    "__pycache__",
-    ".mypy_cache",
-    ".pytest_cache",
-    ".ruff_cache",
-    ".tox",
-    "node_modules",
-    "dist",
-    "build",
-    "fixtures",
-    "logs",
-]
-ignored_filetypes = []
-whitelisted_unicode_chars = [
-    "✅",
-    "❌",
-    "🔥",
-    "💥",
-    "🚀",
-    "❓",
-    "🤝",
-    "🔗",
-    "🚨",
-    "💡",
-    "🛠",
-    "✨",
-    "🐞",
-    "🔁",
-    "🔀",
-    "📄",
-    "📁",
-    "📂",
-    "🟢",
-    "🟡",
-    "🔴",
-    "🎉",
-    "🧪",
-    "📋",
-    "🐍",
-    "🐘",
-    "🗑",
-    "⚠",
-    "►",
-    "→",
-    "✓",
-    "✗",
-    "┌",
-    "┬",
-    "┘",
-    "├",
-    "┤",
-    "┼",
-    "│",
-    "┴",
-    "└",
-    "┐",
-    "╔",
-    "╗",
-    "╚",
-    "╝",
-    "±",
-    "²",
-    "³",
-    "≡",
-    "═",
-    "≤",
-    "≥",
-    "≠",
-    "≈",
-    "─",
-    "—",
-    "ł",
-    "’",
-    "\u00a0",
-]
-common_unicode_threshold = 5

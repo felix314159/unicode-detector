@@ -4,7 +4,21 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from unicode_detector.config import load_config
+from unicode_detector.config import DetectorConfig, load_config
+
+
+def test_load_config_without_config_uses_strict_defaults(
+    tmp_path: Path,
+) -> None:
+    """No config file should fall back to strict built-in defaults."""
+    config, config_path = load_config(None, start_dir=tmp_path)
+
+    assert config_path is None
+    assert config == DetectorConfig()
+    assert config.ignored_dirs == ()
+    assert config.ignored_filetypes == ()
+    assert config.whitelisted_unicode_chars == ()
+    assert config.common_unicode_threshold == 5
 
 
 def test_load_config_from_pyproject(tmp_path: Path) -> None:
