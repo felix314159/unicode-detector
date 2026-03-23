@@ -33,6 +33,8 @@ jobs:
 
       - name: Setup uv
         uses: astral-sh/setup-uv@e06108dd0aef18192324c70427afc47652e63a82 # v7.5.0
+        with:
+          enable-cache: false
 
       - name: Collect added and modified files
         id: changed-files

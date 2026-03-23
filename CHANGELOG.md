@@ -1,6 +1,11 @@
 # Changelog
 
-## 0.1.0
+## Unreleased
+
+## 0.1.3
+
+
+## 0.1.2
 
 - Initial package release.
 - Added a `unicode-detector` console entrypoint.
