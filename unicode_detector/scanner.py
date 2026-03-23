@@ -288,13 +288,16 @@ def format_text(result: ScanResult, *, threshold: int) -> str:
     """Render a scan result as human-readable text."""
     lines = [finding.detail_text for finding in result.findings]
     lines.append("")
-    lines.append(
-        "Summary:"
-        f" {result.total_findings} non-whitelisted unicode character"
-        f"{'' if result.total_findings == 1 else 's'} found in"
-        f" {len(result.files_with_findings)} file"
-        f"{'' if len(result.files_with_findings) == 1 else 's'}."
-    )
+    if result.total_findings == 0:
+        lines.append("Summary: No forbidden unicode characters were found.")
+    else:
+        lines.append(
+            "Summary:"
+            f" {result.total_findings} non-whitelisted unicode character"
+            f"{'' if result.total_findings == 1 else 's'} found in"
+            f" {len(result.files_with_findings)} file"
+            f"{'' if len(result.files_with_findings) == 1 else 's'}."
+        )
     lines.append(
         f"Scanned {result.scanned_files} file"
         f"{'' if result.scanned_files == 1 else 's'} in"

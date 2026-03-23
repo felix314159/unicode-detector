@@ -35,7 +35,10 @@ whitelisted_unicode_chars = ["é"]
     completed = run_cli(str(target), cwd=tmp_path)
 
     assert completed.returncode == 0
-    assert "0 non-whitelisted unicode characters" in completed.stdout
+    assert (
+        "Summary: No forbidden unicode characters were found."
+        in completed.stdout
+    )
 
 
 def test_cli_reads_files_from_stdin(tmp_path: Path) -> None:
