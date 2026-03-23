@@ -4,6 +4,26 @@
 characters in text files. It is designed to work well in local development,
 CI, and GitHub Actions workflows that only scan changed files.
 
+## Why Scan Unicode
+
+Unicode can hide dangerous content in code and documentation changes that look
+harmless in reviews. Invisible characters can be used for LLM prompt-injection
+payloads, obfuscated code execution tricks, or other attacks that arrive in a
+seemingly innocent "fix typo" pull request.
+
+For example, this Python snippet contains an invisible Unicode payload that
+just prints `hello world`, but the same technique could hide something
+malicious:
+
+```python
+fav_number = 8203
+l = {chr(fav_number): "0", chr(fav_number + 1): "1"}
+not_empty = "​‌‌​‌​​​​‌‌​​‌​‌​‌‌​‌‌​​​‌‌​‌‌​​​‌‌​‌‌‌‌​​‌​​​​​​‌‌‌​‌‌‌​‌‌​‌‌‌‌​‌‌‌​​‌​​‌‌​‌‌​​​‌‌​​‌​​"
+
+bits = "".join(l[ol] for ol in not_empty)
+print(bytes(int(bits[i : i + 8], 2) for i in range(0, len(bits), 8)).decode())
+```
+
 ## Install
 
 Use it directly with `uvx` once it is published:
