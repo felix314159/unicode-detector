@@ -96,6 +96,42 @@ for a copy-pasteable example.
   run: uvx unicode-detector --files-from changed_files.txt
 ```
 
+### Reusable workflow for another repository
+
+To avoid copying the changed-file logic, another repository can call the
+reusable workflow published by this repo:
+
+```yaml
+name: Unicode Detector
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize]
+
+permissions:
+  contents: read
+
+jobs:
+  unicode-detector:
+    uses: felix314159/unicode-detector/.github/workflows/reusable-unicode-detector.yaml@v0.1.1
+```
+
+Optional inputs:
+
+```yaml
+jobs:
+  unicode-detector:
+    uses: felix314159/unicode-detector/.github/workflows/reusable-unicode-detector.yaml@v0.1.1
+    with:
+      config-path: pyproject.toml
+      root: .
+      format: text
+```
+
+To block merging until the check passes, the consuming repository must also
+mark the `unicode-detector` status check as required in branch protection or
+its ruleset.
+
 ### This repository's PR workflow
 
 This repo includes

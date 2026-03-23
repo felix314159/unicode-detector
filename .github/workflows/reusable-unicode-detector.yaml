@@ -1,0 +1,68 @@
+name: Reusable Unicode Detector
+
+on:
+  workflow_call:
+    inputs:
+      config-path:
+        description: Optional path to a unicode-detector TOML config file.
+        required: false
+        default: ""
+        type: string
+      root:
+        description: Base directory to scan relative paths from.
+        required: false
+        default: "."
+        type: string
+      format:
+        description: Output format for unicode-detector.
+        required: false
+        default: "text"
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  unicode-detector:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          fetch-depth: 0
+
+      - name: Setup uv
+        uses: astral-sh/setup-uv@e06108dd0aef18192324c70427afc47652e63a82 # v7.5.0
+
+      - name: Collect added and modified files
+        id: changed-files
+        shell: bash
+        run: |
+          BASE_SHA=$(git merge-base "${{ github.event.pull_request.base.sha }}" "${{ github.event.pull_request.head.sha }}")
+          HEAD_SHA="${{ github.event.pull_request.head.sha }}"
+          git diff --name-only --diff-filter=AMR "$BASE_SHA" "$HEAD_SHA" > changed_unicode_files.txt
+
+          if [ -s changed_unicode_files.txt ]; then
+            echo "has_files=true" >> "$GITHUB_OUTPUT"
+            echo "Scanning these paths:"
+            cat changed_unicode_files.txt
+          else
+            echo "has_files=false" >> "$GITHUB_OUTPUT"
+            echo "No added or modified files to scan."
+          fi
+
+      - name: Run unicode detector on changed files
+        if: steps.changed-files.outputs.has_files == 'true'
+        shell: bash
+        run: |
+          args=(
+            --root "${{ inputs.root }}"
+            --format "${{ inputs.format }}"
+            --files-from changed_unicode_files.txt
+          )
+
+          if [ -n "${{ inputs.config-path }}" ]; then
+            args+=(--config "${{ inputs.config-path }}")
+          fi
+
+          uvx unicode-detector "${args[@]}"
